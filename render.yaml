@@ -1,10 +1,42 @@
 services:
   - type: web
     name: shipment-tracker
-    env: node
+    env: php
     plan: free
-    buildCommand: |
-      apt-get install -y php8.1 php8.1-cli php8.1-mbstring php8.1-xml php8.1-zip php8.1-curl unzip curl
-      curl -sS https://getcomposer.org/installer | php8.1
-      php8.1 composer.phar install --no-dev --optimize-autoloader
-    startCommand: php8.1 artisan serve --host=0.0.0.0 --port=10000
+    branch: main
+    root: .
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    preDeployCommand: |
+      php artisan migrate --force
+      php artisan db:seed --force   # optional
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:clear
+    envVars:
+      - key: APP_NAME
+        value: "Shipment Tracker"
+      - key: APP_ENV
+        value: "production"
+      - key: APP_KEY
+        value: "base64:YOUR_GENERATED_APP_KEY"
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: "https://shipmenttracking-3.onrender.com"
+      - key: DATABASE_URL
+        value: "postgresql://YOUR_DB_USERNAME:YOUR_DB_PASSWORD@YOUR_DB_HOST:5432/shipment_tracker"
+      - key: SESSION_DRIVER
+        value: "file"
+      - key: CACHE_STORE
+        value: "file"
+      - key: QUEUE_CONNECTION
+        value: "sync"
+      - key: FILESYSTEM_DISK
+        value: "local"
+      - key: MAIL_MAILER
+        value: "log"
+      - key: MAIL_FROM_ADDRESS
+        value: "hello@example.com"
+      - key: MAIL_FROM_NAME
+        value: "Shipment Tracker"
