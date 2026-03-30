@@ -8,8 +8,16 @@ services:
     buildCommand: composer install --no-dev --optimize-autoloader
     startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
     preDeployCommand: |
+      # Install dependencies
+      composer install --no-dev --optimize-autoloader
+      
+      # Run migrations and optional seeding
       php artisan migrate --force
       php artisan db:seed --force   # optional
+      
+      # Clear and cache config/routes/views
+      php artisan config:clear
+      php artisan cache:clear
       php artisan config:cache
       php artisan route:cache
       php artisan view:clear
@@ -20,12 +28,14 @@ services:
         value: "production"
       - key: APP_KEY
         value: "base64:K1h+gIh9TtT3Qm6n7vXyz5dAb3Qx1ZkF3j+gO7H6fL4="
+      - key: APP_CIPHER
+        value: "aes-256-cbc"
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
         value: "https://shipmenttracking-3.onrender.com"
       - key: DATABASE_URL
-        value: "postgresql://YOUR_DB_USERNAME:YOUR_DB_PASSWORD@YOUR_DB_HOST:5432/shipment_tracker"
+        value: "postgresql://user:password@host:5432/shipment_tracker"
       - key: SESSION_DRIVER
         value: "file"
       - key: CACHE_STORE
@@ -40,5 +50,3 @@ services:
         value: "hello@example.com"
       - key: MAIL_FROM_NAME
         value: "Shipment Tracker"
-      - key: APP_CIPHER
-        value: "aes-256-cbc"
