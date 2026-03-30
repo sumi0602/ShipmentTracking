@@ -19,7 +19,7 @@ services:
       - key: APP_ENV
         value: "production"
       - key: APP_KEY
-        value: "base64:YOUR_GENERATED_APP_KEY"
+        value: "base64:K1h+gIh9TtT3Qm6n7vXyz5dAb3Qx1ZkF3j+gO7H6fL4="
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
@@ -40,3 +40,5 @@ services:
         value: "hello@example.com"
       - key: MAIL_FROM_NAME
         value: "Shipment Tracker"
+      - key: APP_CIPHER
+        value: "aes-256-cbc"
