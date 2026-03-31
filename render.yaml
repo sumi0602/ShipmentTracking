@@ -8,14 +8,8 @@ services:
     buildCommand: composer install --no-dev --optimize-autoloader
     startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
     preDeployCommand: |
-      # Install dependencies
-      composer install --no-dev --optimize-autoloader
-      
-      # Run migrations and optional seeding
       php artisan migrate --force
-      php artisan db:seed --force   # optional
-      
-      # Clear and cache config/routes/views
+      # php artisan db:seed --force
       php artisan config:clear
       php artisan cache:clear
       php artisan config:cache
@@ -34,8 +28,18 @@ services:
         value: "false"
       - key: APP_URL
         value: "https://shipmenttracking-3.onrender.com"
-      - key: DATABASE_URL
-        value: "postgresql://user:password@host:5432/shipment_tracker"
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: dpg-d756naq4d50c73e66mmg-a
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: shipment_tracker
+      - key: DB_USERNAME
+        value: shipment_tracker_user
+      - key: DB_PASSWORD
+        value: "<your-db-password>"
       - key: SESSION_DRIVER
         value: "file"
       - key: CACHE_STORE
